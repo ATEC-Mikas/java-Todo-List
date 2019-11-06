@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <!--/*/ <th:block th:include="shared/head :: head"></th:block> /*/-->
+</head>
+<body>
+<!--/*/ <th:block th:include="shared/header :: header"></th:block> /*/-->
+<div class="container">
+    <div class="row">
+        <div class= "col-sm-6 offset-sm-3" th:object="${todo}">
+            <form method="post" th:action="@{/todo/edit/{id}(id=*{getId()})}">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" th:value="*{getName()}" class="form-control" name="name" id="name" aria-describedby="nameHelp" placeholder="Name of Todo">
+                    <small id="nameHelp" class="form-text text-muted">Name of the Todo Note</small>
+                </div>
+                <div class="form-group">
+                    <label for="name">Description</label>
+                    <textarea class="form-control" th:text="*{getDescription()}" name="description" id="description" aria-describedby="descriptionHelp" placeholder="Description here..."></textarea>
+                    <small id="descriptionHelp" class="form-text text-muted">Description of the Todo Note</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

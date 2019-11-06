@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <!--/*/ <th:block th:include="shared/head :: head"></th:block> /*/-->
+    <style>
+        div.todoCard {
+            margin:10px;
+        }
+    </style>
+</head>
+<body>
+<!--/*/ <th:block th:include="shared/header :: header"></th:block> /*/-->
+
+<div class="container" style="margin-top:20px">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/todo">Todo List</a></li>
+            <li class="breadcrumb-item active" th:text="${todo.getName()}" aria-current="page"></li>
+        </ol>
+    </nav>
+    <div class="card todoCard" th:object="${todo}">
+        <div class="card-body">
+            <th:block th:if="*{getStatus()}">
+                <form method="post" th:action="@{/todo/uncheck/{id}(id=*{getId()})}">
+                    <input type="submit" class="btn btn-sm btn-info float-right" value="X" />
+                </form>
+            </th:block>
+            <th:block th:unless="*{getStatus()}">
+                <form method="post" th:action="@{/todo/check/{id}(id=*{getId()})}">
+                    <input type="submit" class="btn btn-sm btn-info float-right" value="✓" />
+                </form>
+            </th:block>
+            <h5 class="card-title" th:text= "*{getName()}">Todo Name</h5>
+            <th:block th:if="*{getStatus()}">
+                <h6 class="card-subtitle mb-2 text-success">Done</h6>
+            </th:block>
+            <th:block th:unless="*{getStatus()}">
+                <h6 class="card-subtitle mb-2 text-danger">To Do</h6>
+            </th:block>
+            <p class="card-text" th:text= "*{getDescription()}">Todo Description</p>
+            <form method="post" th:action="@{/todo/delete/{id}(id=*{getId()})}">
+                <input type="submit" class="btn btn-sm btn-danger float-right" value="Delete" />
+            </form>
+            <a th:href="@{/todo/edit/{id}(id=*{getId()})}" class="card-link text-warning">Edit</a>
+        </div>
+    </div>
+
+    <div class="col-md-12" style="margin:10px auto">
+        <h3>Add a comment</h3>
+        <form method="post" th:action="@{/todo/{id}/comment(id=${todo.getId()})}">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" name="comment" id="comment" placeholder="Comment text" aria-label="comment" aria-describedby="commentButton">
+                <div class="input-group-append">
+                    <input class="btn btn-primary" type="submit" id="commentButton" value="Comment"/>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-12" style="margin:10px auto">
+        <h3>Comments</h3>
+        <div class="commentList">
+            <th:block th:each="comment : ${comments}">
+                <div class="card" style="margin:10px auto"  th:object="${comment}">
+                    <div class="card-body" >
+                        <h5 class="card-title">Anonymous</h5>
+                        <p class="card-text" th:text="*{getComment()}">text</p>
+                        <p class="text-muted" th:text="*{getCreatedAt()}">date</p>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </div>
+    <div class="col-md-12" style="margin:20px auto">
+
+        <a class="btn btn-primary" th:if="${comments.hasPrevious()}" th:href="@{/todo/{id}(id=${todo.getId()},page=${comments.getNumber()})}">Previous</a>
+        <a class="btn btn-primary" th:if="${comments.hasNext()}" th:href="@{/todo/{id}(id=${todo.getId()},page=${comments.getNumber()+2})}">Next</a>
+
+    </div>
+</div>
+</body>
+</html>

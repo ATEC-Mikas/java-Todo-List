@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <!--/*/ <th:block th:include="shared/head :: head"></th:block> /*/-->
+    <style>
+            div.buttonList {
+                display:flex;
+                align-items:center;
+                flex-direction:row;
+            }
+            div.buttonList a.btn {
+                margin-right:10px;
+            }
+            div.cardlist {
+                display:flex;
+                align-items:center;
+                flex-direction:row;
+                flex-wrap:wrap;
+            }
+            div.cardlist div.card {
+                width:250px;
+            }
+            div.todoCard {
+                margin:10px;
+            }
+        </style>
+</head>
+<body>
+<!--/*/ <th:block th:include="shared/header :: header"></th:block> /*/-->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+
+            <h1>
+                Todo List
+            </h1>
+            <div class="col-md-12">
+                <a class="btn btn-primary float-right" role="button" href="/todo/create">Add Todo to TodoList</a>
+                <a class="btn btn-primary float-right" role="button" href="/todo/list" style="margin-right:10px">List of Todos</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="margin-top:20px">
+    <h2 class="text-danger">Todos To Do</h2>
+    <h3 th:if="${todosTodo.isEmpty()}" class="text-muted text-center">
+        Empty
+    </h3>
+    <div class="cardlist">
+        <th:block th:each="todo : ${todosTodo}">
+            <div class="card todoCard" th:object="${todo}">
+                <div class="card-body">
+                    <th:block th:if="*{getStatus()}">
+                        <form method="post" th:action="@{/todo/uncheck/{id}(id=*{getId()})}">
+                            <input type="submit" class="btn btn-sm btn-info float-right" value="X" />
+                        </form>
+                    </th:block>
+                    <th:block th:unless="*{getStatus()}">
+                        <form method="post" th:action="@{/todo/check/{id}(id=*{getId()})}">
+                            <input type="submit" class="btn btn-sm btn-info float-right" value="✓" />
+                        </form>
+                    </th:block>
+                    <a th:href="@{/todo/{id}(id=*{getId()})}">
+                        <h5 class="card-title text-truncate" th:text= "*{getName()}">
+                            Todo Name
+                        </h5>
+                    </a>
+                    <th:block th:if="*{getStatus()}">
+                        <h6 class="card-subtitle mb-2 text-success">Done</h6>
+                    </th:block>
+                    <th:block th:unless="*{getStatus()}">
+                        <h6 class="card-subtitle mb-2 text-danger">To Do</h6>
+                    </th:block>
+                    <p class="card-text text-truncate" th:text= "*{getDescription()}">Todo Description</p>
+                    <!--                    <form method="post" th:action="@{/todo/delete/{id}(id=*{getId()})}">-->
+                    <!--                        <input type="submit" class="btn btn-sm btn-danger float-right" value="Delete" />-->
+                    <!--                    </form>-->
+                    <a th:href="@{/todo/edit/{id}(id=*{getId()})}" class="card-link text-warning">Edit</a>
+                </div>
+            </div>
+        </th:block>
+    </div>
+    <h2 class="text-success">Todos Done</h2>
+    <h3 th:if="${todosDone.isEmpty()}" class="text-muted text-center">
+        Empty
+    </h3>
+    <div class="cardlist">
+        <th:block th:each="todo : ${todosDone}">
+            <div class="card todoCard" th:object="${todo}">
+                <div class="card-body">
+                    <th:block th:if="*{getStatus()}">
+                        <form method="post" th:action="@{/todo/uncheck/{id}(id=*{getId()})}">
+                            <input type="submit" class="btn btn-sm btn-info float-right" value="X" />
+                        </form>
+                    </th:block>
+                    <th:block th:unless="*{getStatus()}">
+                        <form method="post" th:action="@{/todo/check/{id}(id=*{getId()})}">
+                            <input type="submit" class="btn btn-sm btn-info float-right" value="✓" />
+                        </form>
+                    </th:block>
+                    <a th:href="@{/todo/{id}(id=*{getId()})}">
+                        <h5 class="card-title text-truncate" th:text= "*{getName()}">
+                            Todo Name
+                        </h5>
+                    </a>
+                    <th:block th:if="*{getStatus()}">
+                        <h6 class="card-subtitle mb-2 text-success">Done</h6>
+                    </th:block>
+                    <th:block th:unless="*{getStatus()}">
+                        <h6 class="card-subtitle mb-2 text-danger">To Do</h6>
+                    </th:block>
+                    <p class="card-text text-truncate" th:text= "*{getDescription()}">Todo Description</p>
+<!--                    <form method="post" th:action="@{/todo/delete/{id}(id=*{getId()})}">-->
+<!--                        <input type="submit" class="btn btn-sm btn-danger float-right" value="Delete" />-->
+<!--                    </form>-->
+                    <a th:href="@{/todo/edit/{id}(id=*{getId()})}" class="card-link text-warning">Edit</a>
+                </div>
+            </div>
+        </th:block>
+    </div>
+
+</div>
+</body>
+</html>
+
+<!--Legacy-->
+<!--<th:block th:each="todo : ${todos}">-->
+<!--    <div class="card todoCard" th:object="${todo}">-->
+<!--        <div class="card-body">-->
+<!--            <th:block th:if="*{getStatus()}">-->
+<!--                <form method="post" th:action="@{/todo/uncheck/{id}(id=*{getId()})}">-->
+<!--                    <input type="submit" class="btn btn-sm btn-info float-right" value="X" />-->
+<!--                </form>-->
+<!--            </th:block>-->
+<!--            <th:block th:unless="*{getStatus()}">-->
+<!--                <form method="post" th:action="@{/todo/check/{id}(id=*{getId()})}">-->
+<!--                    <input type="submit" class="btn btn-sm btn-info float-right" value="✓" />-->
+<!--                </form>-->
+<!--            </th:block>-->
+<!--            <a th:href="@{/todo/{id}(id=*{getId()})}">-->
+<!--                <h5 class="card-title text-truncate" th:text= "*{getName()}">-->
+<!--                    Todo Name-->
+<!--                </h5>-->
+<!--            </a>-->
+<!--            <th:block th:if="*{getStatus()}">-->
+<!--                <h6 class="card-subtitle mb-2 text-success">Done</h6>-->
+<!--            </th:block>-->
+<!--            <th:block th:unless="*{getStatus()}">-->
+<!--                <h6 class="card-subtitle mb-2 text-danger">To Do</h6>-->
+<!--            </th:block>-->
+<!--            <p class="card-text text-truncate" th:text= "*{getDescription()}">Todo Description</p>-->
+<!--            &lt;!&ndash;                    <form method="post" th:action="@{/todo/delete/{id}(id=*{getId()})}">&ndash;&gt;-->
+<!--            &lt;!&ndash;                        <input type="submit" class="btn btn-sm btn-danger float-right" value="Delete" />&ndash;&gt;-->
+<!--            &lt;!&ndash;                    </form>&ndash;&gt;-->
+<!--            <a th:href="@{/todo/edit/{id}(id=*{getId()})}" class="card-link text-warning">Edit</a>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</th:block>-->
